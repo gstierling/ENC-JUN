@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Encuesta JUNIO 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0d1117;color:#fff;font-family:'Nunito',sans-serif;min-height:100vh;padding:24px 16px 48px;}
+.grid-bg{position:fixed;top:0;left:0;width:100%;height:100%;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
+.wrap{max-width:1100px;margin:0 auto;position:relative;z-index:1;}
+
+/* HEADER */
+.header{text-align:center;margin-bottom:32px;}
+.header h1{font-size:32px;font-weight:900;letter-spacing:1px;color:#fff;text-transform:uppercase;}
+.header .date{font-size:22px;font-weight:700;color:#f97316;margin-top:4px;}
+.header .subtitle{font-size:14px;color:#888;margin-top:2px;}
+.badges{display:flex;justify-content:center;align-items:center;gap:12px;margin-top:12px;flex-wrap:wrap;}
+.badge-count{background:#1e2530;border:1px solid #2a3340;border-radius:8px;padding:6px 18px;font-size:14px;color:#aaa;}
+.badge-count span{color:#fff;font-weight:800;font-size:20px;margin-left:6px;}
+.badge-live{display:flex;align-items:center;gap:6px;background:#1e2530;border:1px solid #2a3340;border-radius:8px;padding:6px 14px;font-size:13px;color:#aaa;}
+.dot{width:8px;height:8px;border-radius:50%;background:#00d4aa;animation:pulse 1.5s infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.3)}}
+
+/* CARDS GRID */
+.grid{display:grid;gap:20px;margin-top:8px;}
+.grid-2{grid-template-columns:repeat(auto-fit,minmax(320px,1fr));}
+.grid-3{grid-template-columns:repeat(auto-fit,minmax(280px,1fr));}
+.card{background:#161b22;border:1px solid #21262d;border-radius:14px;padding:22px 20px;}
+.card-title{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#fff;margin-bottom:16px;opacity:.85;}
+
+/* DONUT */
+.donut-wrap{display:flex;flex-direction:column;align-items:center;gap:16px;}
+.donut-svg{overflow:visible;}
+.donut-center-label{font-size:28px;font-weight:900;fill:#fff;}
+.donut-center-sub{font-size:12px;fill:#888;}
+.legend{width:100%;display:flex;flex-direction:column;gap:7px;}
+.legend-item{display:flex;align-items:center;justify-content:space-between;font-size:14px;}
+.legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-right:8px;}
+.legend-label{flex:1;color:#ccc;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.legend-val{font-weight:700;color:#fff;font-size:13px;margin-left:8px;}
+.legend-pct{color:#888;font-size:12px;margin-left:4px;}
+
+/* BAR / NPS */
+.nps-wrap{display:flex;flex-direction:column;gap:8px;}
+.nps-score{font-size:52px;font-weight:900;color:#00d4aa;text-align:center;line-height:1;}
+.nps-label{text-align:center;font-size:13px;color:#888;margin-bottom:8px;}
+.bar-row{display:flex;align-items:center;gap:8px;font-size:13px;}
+.bar-key{width:22px;text-align:right;color:#aaa;flex-shrink:0;}
+.bar-bg{flex:1;background:#1e2530;border-radius:4px;height:14px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:4px;transition:width .6s ease;}
+.bar-cnt{width:28px;text-align:right;color:#ccc;flex-shrink:0;}
+
+/* FEED / LIST */
+.feed{display:flex;flex-direction:column;gap:8px;max-height:280px;overflow-y:auto;}
+.feed::-webkit-scrollbar{width:4px;}
+.feed::-webkit-scrollbar-thumb{background:#2a3340;border-radius:4px;}
+.feed-item{background:#1e2530;border-radius:8px;padding:10px 12px;font-size:13px;color:#ccc;line-height:1.5;}
+.feed-item .tag{display:inline-block;background:#f97316;color:#000;border-radius:4px;font-size:11px;font-weight:700;padding:1px 6px;margin-right:6px;}
+.feed-item .tag2{background:#00d4aa;color:#000;}
+
+/* EMPTY */
+.empty{text-align:center;color:#444;font-size:14px;padding:20px 0;}
+
+/* FOOTER */
+.footer{display:flex;justify-content:center;gap:12px;margin-top:32px;}
+.btn{display:inline-block;padding:10px 24px;border-radius:8px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;text-decoration:none;cursor:pointer;border:none;}
+.btn-bbdd{background:#1e2530;color:#fff;border:1px solid #2a3340;}
+.btn-bbdd:hover{background:#2a3340;}
+</style>
+</head>
+<body>
+<div class="grid-bg"></div>
+<div class="wrap">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Encuesta JUNIO 2026</h1>
+    <div class="date" id="hoy"></div>
+    <div class="subtitle">CicloRecreoVía · Actualización automática cada 30s</div>
+    <div class="badges">
+      <div class="badge-count">Registros totales <span id="total">—</span></div>
+      <div class="badge-live"><div class="dot"></div> Live</div>
+    </div>
+  </div>
+
+  <!-- FILA 1: Circuito + Género -->
+  <div class="grid grid-2">
+    <div class="card">
+      <div class="card-title">Circuito</div>
+      <div class="donut-wrap" id="circ-wrap"><div class="empty">Cargando…</div></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Género</div>
+      <div class="donut-wrap" id="gen-wrap"><div class="empty">Cargando…</div></div>
+    </div>
+  </div>
+
+  <!-- FILA 2: Edad + Recomendación NPS -->
+  <div class="grid grid-2" style="margin-top:20px;">
+    <div class="card">
+      <div class="card-title">Edad estimada</div>
+      <div class="donut-wrap" id="edad-wrap"><div class="empty">Cargando…</div></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Probabilidad de recomendación (1–10)</div>
+      <div id="nps-wrap"><div class="empty">Cargando…</div></div>
+    </div>
+  </div>
+
+  <!-- FILA 3: Comuna + Comunidad -->
+  <div class="grid grid-2" style="margin-top:20px;">
+    <div class="card">
+      <div class="card-title">Comuna de residencia del encuestado</div>
+      <div class="donut-wrap" id="comuna-wrap"><div class="empty">Cargando…</div></div>
+    </div>
+    <div class="card">
+      <div class="card-title">4) ¿CicloRecreoVía genera sentimiento de comunidad?</div>
+      <div class="donut-wrap" id="com-wrap"><div class="empty">Cargando…</div></div>
+    </div>
+  </div>
+
+  <!-- FILA 4: Razones baja natalidad -->
+  <div class="grid" style="margin-top:20px;">
+    <div class="card">
+      <div class="card-title">5) Razones principales de baja natalidad (top respuestas)</div>
+      <div id="natal-wrap"><div class="empty">Cargando…</div></div>
+    </div>
+  </div>
+
+  <!-- FILA 5: Vigía + Calle encuesta + Calle reemplazo + Comentarios -->
+  <div class="grid grid-2" style="margin-top:20px;">
+    <div class="card">
+      <div class="card-title">Vigía que tomó la encuesta</div>
+      <div class="donut-wrap" id="vigia-wrap"><div class="empty">Cargando…</div></div>
+    </div>
+    <div class="card">
+      <div class="card-title">2) Calle donde se toma la encuesta</div>
+      <div class="donut-wrap" id="calle-wrap"><div class="empty">Cargando…</div></div>
+    </div>
+  </div>
+
+  <div class="grid grid-2" style="margin-top:20px;">
+    <div class="card">
+      <div class="card-title">3) Calle de reemplazo propuesta</div>
+      <div class="feed" id="reemplazo-feed"><div class="empty">Cargando…</div></div>
+    </div>
+    <div class="card">
+      <div class="card-title">6) Comentarios y sugerencias</div>
+      <div class="feed" id="coment-feed"><div class="empty">Cargando…</div></div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <a class="btn btn-bbdd" href="https://docs.google.com/spreadsheets/d/1Vpn-rIDAC-0ClBKpAiZ9_oJVtJhjcJIm4U04vhD3OZE/edit?gid=416554782" target="_blank">BBDD</a>
+  </div>
+
+</div>
+
+<script>
+var SHEET_ID = "1Vpn-rIDAC-0ClBKpAiZ9_oJVtJhjcJIm4U04vhD3OZE";
+var GID = "416554782";
+var CSV_URL = "https://docs.google.com/spreadsheets/d/"+SHEET_ID+"/gviz/tq?tqx=out:csv&gid="+GID;
+
+var COLORS = ["#00d4aa","#f97316","#6366f1","#f59e0b","#ec4899","#22d3ee","#84cc16","#a78bfa","#fb7185","#34d399","#fbbf24","#60a5fa","#c084fc","#4ade80"];
+
+// Fecha hoy
+(function(){
+  var d=new Date();
+  var dias=["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];
+  var meses=["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+  document.getElementById("hoy").textContent=dias[d.getDay()]+" "+d.getDate()+" de "+meses[d.getMonth()]+" "+d.getFullYear();
+})();
+
+function parseCSV(txt){
+  var rows=[];
+  var lines=txt.split("\n");
+  for(var i=0;i<lines.length;i++){
+    var line=lines[i].trim();
+    if(!line)continue;
+    var cols=[];var cur="";var inQ=false;
+    for(var c=0;c<line.length;c++){
+      var ch=line[c];
+      if(ch==='"'){inQ=!inQ;}
+      else if(ch===','&&!inQ){cols.push(cur.trim());cur="";}
+      else cur+=ch;
+    }
+    cols.push(cur.trim());
+    rows.push(cols);
+  }
+  return rows;
+}
+
+function freq(arr){
+  var m={};
+  arr.forEach(function(v){
+    var k=v&&v.trim()?v.trim():"(sin respuesta)";
+    m[k]=(m[k]||0)+1;
+  });
+  return m;
+}
+
+function sortedFreq(map,topN){
+  var arr=Object.keys(map).map(function(k){return{k:k,v:map[k]};});
+  arr.sort(function(a,b){return b.v-a.v;});
+  if(topN)arr=arr.slice(0,topN);
+  return arr;
+}
+
+function buildDonut(containerId, map, total){
+  var data=sortedFreq(map,10);
+  if(!data.length){document.getElementById(containerId).innerHTML='<div class="empty">Sin datos</div>';return;}
+  var R=70,cx=80,cy=80,stroke=22;
+  var circ=2*Math.PI*R;
+  var offset=0;var paths="";
+  data.forEach(function(d,i){
+    var pct=d.v/total;
+    var dash=pct*circ;
+    var gap=circ-dash;
+    paths+='<circle cx="'+cx+'" cy="'+cy+'" r="'+R+'" fill="none" stroke="'+COLORS[i%COLORS.length]+'" stroke-width="'+stroke+'" stroke-dasharray="'+dash.toFixed(2)+' '+gap.toFixed(2)+'" stroke-dashoffset="'+(-offset*circ).toFixed(2)+'" transform="rotate(-90 '+cx+' '+cy+')" />';
+    offset+=pct;
+  });
+  var svg='<svg class="donut-svg" width="160" height="160" viewBox="0 0 160 160">'+
+    '<circle cx="'+cx+'" cy="'+cy+'" r="'+R+'" fill="none" stroke="#1e2530" stroke-width="'+stroke+'"/>'+
+    paths+
+    '<text x="'+cx+'" y="'+(cy-4)+'" text-anchor="middle" class="donut-center-label">'+total+'</text>'+
+    '<text x="'+cx+'" y="'+(cy+14)+'" text-anchor="middle" class="donut-center-sub">total</text>'+
+    '</svg>';
+  var legend='<div class="legend">';
+  data.forEach(function(d,i){
+    var pct=Math.round(d.v/total*100);
+    legend+='<div class="legend-item"><span class="legend-dot" style="background:'+COLORS[i%COLORS.length]+'"></span><span class="legend-label" title="'+d.k+'">'+d.k+'</span><span class="legend-val">'+d.v+'</span><span class="legend-pct">('+pct+'%)</span></div>';
+  });
+  legend+='</div>';
+  document.getElementById(containerId).innerHTML=svg+legend;
+}
+
+function buildNPS(containerId, vals){
+  if(!vals.length){document.getElementById(containerId).innerHTML='<div class="empty">Sin datos</div>';return;}
+  var nums=vals.map(function(v){return parseInt(v);}).filter(function(n){return !isNaN(n)&&n>=1&&n<=10;});
+  if(!nums.length){document.getElementById(containerId).innerHTML='<div class="empty">Sin datos válidos</div>';return;}
+  var avg=(nums.reduce(function(a,b){return a+b;},0)/nums.length).toFixed(1);
+  var map={};for(var i=1;i<=10;i++)map[i]=0;
+  nums.forEach(function(n){map[n]=(map[n]||0)+1;});
+  var maxV=Math.max.apply(null,Object.values(map));
+  var bars="";
+  for(var i=1;i<=10;i++){
+    var pct=maxV?Math.round(map[i]/maxV*100):0;
+    var col=i<=6?"#f97316":i<=8?"#f59e0b":"#00d4aa";
+    bars+='<div class="bar-row"><span class="bar-key">'+i+'</span><div class="bar-bg"><div class="bar-fill" style="width:'+pct+'%;background:'+col+'"></div></div><span class="bar-cnt">'+map[i]+'</span></div>';
+  }
+  document.getElementById(containerId).innerHTML='<div class="nps-wrap"><div class="nps-score">'+avg+'</div><div class="nps-label">promedio de '+nums.length+' respuestas</div>'+bars+'</div>';
+}
+
+function buildFeed(containerId, items, tagField){
+  var filtered=items.filter(function(v){return v&&v.trim();});
+  if(!filtered.length){document.getElementById(containerId).innerHTML='<div class="empty">Sin respuestas</div>';return;}
+  var html="";
+  filtered.forEach(function(v){
+    html+='<div class="feed-item">'+escH(v.trim())+'</div>';
+  });
+  document.getElementById(containerId).innerHTML=html;
+}
+
+function buildBarFreq(containerId, map, total){
+  var data=sortedFreq(map,15);
+  if(!data.length){document.getElementById(containerId).innerHTML='<div class="empty">Sin datos</div>';return;}
+  var maxV=data[0].v;
+  var html='<div class="nps-wrap">';
+  data.forEach(function(d,i){
+    var pct=Math.round(d.v/maxV*100);
+    html+='<div class="bar-row" style="margin-bottom:4px;"><span class="bar-key" style="width:auto;min-width:120px;max-width:200px;white-space:normal;font-size:12px;color:#ccc;text-align:left;padding-right:8px;">'+escH(d.k)+'</span><div class="bar-bg"><div class="bar-fill" style="width:'+pct+'%;background:'+COLORS[i%COLORS.length]+'"></div></div><span class="bar-cnt">'+d.v+'</span></div>';
+  });
+  html+='</div>';
+  document.getElementById(containerId).innerHTML=html;
+}
+
+function escH(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+
+function bucketEdad(v){
+  var n=parseInt(v);
+  if(isNaN(n))return "(sin dato)";
+  if(n<18)return "<18";
+  if(n<=24)return "18–24";
+  if(n<=34)return "25–34";
+  if(n<=44)return "35–44";
+  if(n<=54)return "45–54";
+  if(n<=64)return "55–64";
+  return "65+";
+}
+
+function processNatalidad(vals){
+  // respuestas pueden venir separadas por coma, punto y coma, o ser texto libre
+  var m={};
+  vals.forEach(function(v){
+    if(!v||!v.trim())return;
+    // Intentar separar por coma o punto y coma
+    var partes=v.split(/[,;]+/);
+    partes.forEach(function(p){
+      p=p.trim();
+      if(p.length>2&&p.length<120)m[p]=(m[p]||0)+1;
+    });
+  });
+  return m;
+}
+
+function loadData(){
+  fetch(CSV_URL+"&cachebust="+Date.now())
+    .then(function(r){return r.text();})
+    .then(function(txt){
+      var rows=parseCSV(txt);
+      if(rows.length<2){document.getElementById("total").textContent="0";return;}
+      var header=rows[0];
+      var data=rows.slice(1).filter(function(r){return r[0]&&r[0].trim();});
+      document.getElementById("total").textContent=data.length;
+
+      // Índices (0-based): A=0,B=1,C=2,D=3,E=4,F=5,G=6,H=7,I=8,J=9,K=10,L=11
+      var iVigia=1,iCirc=2,iEdad=3,iGen=4;
+      var iComuna=6,iRec=7,iCalle=8,iReemplazo=9,iCom=10,iNatal=11;
+
+      var vigia=data.map(function(r){return r[iVigia]||"";});
+      var circ=data.map(function(r){return r[iCirc]||"";});
+      var edad=data.map(function(r){return bucketEdad(r[iEdad]);});
+      var gen=data.map(function(r){return r[iGen]||"";});
+      var comuna=data.map(function(r){return r[iComuna]||"";});
+      var rec=data.map(function(r){return r[iRec]||"";});
+      var calle=data.map(function(r){return r[iCalle]||"";});
+      var reemplazo=data.map(function(r){return r[iReemplazo]||"";});
+      var com=data.map(function(r){return r[iCom]||"";});
+      var natal=data.map(function(r){return r[iNatal]||"";});
+
+      var n=data.length;
+      buildDonut("circ-wrap",freq(circ),n);
+      buildDonut("gen-wrap",freq(gen),n);
+      buildDonut("edad-wrap",freq(edad),n);
+      buildNPS("nps-wrap",rec);
+      buildDonut("comuna-wrap",freq(comuna),n);
+      buildDonut("com-wrap",freq(com),n);
+      buildDonut("vigia-wrap",freq(vigia),n);
+      buildDonut("calle-wrap",freq(calle),n);
+
+      // Razones natalidad — barra horizontal con top respuestas
+      var natalMap=processNatalidad(natal);
+      buildBarFreq("natal-wrap",natalMap,n);
+
+      // Feeds textuales
+      buildFeed("reemplazo-feed",reemplazo);
+      buildFeed("coment-feed",data.map(function(r){return r[12]||"";}));
+    })
+    .catch(function(e){
+      console.error(e);
+    });
+}
+
+loadData();
+setInterval(loadData,30000);
+</script>
+</body>
+</html>
