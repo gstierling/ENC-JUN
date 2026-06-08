@@ -176,20 +176,24 @@ var COLORS = ["#00d4aa","#f97316","#6366f1","#f59e0b","#ec4899","#22d3ee","#84cc
 
 function parseCSV(txt){
   var rows=[];
-  var lines=txt.split("\n");
-  for(var i=0;i<lines.length;i++){
-    var line=lines[i].trim();
-    if(!line)continue;
-    var cols=[];var cur="";var inQ=false;
-    for(var c=0;c<line.length;c++){
-      var ch=line[c];
-      if(ch==='"'){inQ=!inQ;}
-      else if(ch===','&&!inQ){cols.push(cur.trim());cur="";}
-      else cur+=ch;
+  var cols=[];var cur="";var inQ=false;
+  for(var i=0;i<txt.length;i++){
+    var ch=txt[i];
+    if(ch==='"'){
+      if(inQ&&txt[i+1]==='"'){cur+='"';i++;}
+      else inQ=!inQ;
+    } else if(ch===','&&!inQ){
+      cols.push(cur.trim());cur="";
+    } else if((ch==='\n'||ch==='\r')&&!inQ){
+      if(ch==='\r'&&txt[i+1]==='\n')i++;
+      cols.push(cur.trim());cur="";
+      if(cols.some(function(c){return c.length>0;}))rows.push(cols);
+      cols=[];
+    } else {
+      cur+=ch;
     }
-    cols.push(cur.trim());
-    rows.push(cols);
   }
+  if(cur.length||cols.length){cols.push(cur.trim());if(cols.some(function(c){return c.length>0;}))rows.push(cols);}
   return rows;
 }
 
